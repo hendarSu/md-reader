@@ -1,0 +1,255 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Syntax Highlighting - Dark Theme */
+pre {
+  @apply rounded-lg overflow-x-auto text-sm my-4;
+  background-color: #1e2029 !important; /* Dark background similar to the image */
+  border-radius: 6px;
+  margin: 1.5em 0;
+}
+
+pre[class*="language-"] {
+  @apply p-6;
+  color: #f8f8f2;
+}
+
+code[class*="language-"] {
+  text-shadow: none;
+  color: #f8f8f2;
+  font-family: "Consolas", "Monaco", "Andale Mono", "Ubuntu Mono", monospace;
+}
+
+/* Line Numbers */
+.line-number::before {
+  @apply inline-block w-8 text-right pr-4 text-gray-500 select-none;
+  content: attr(line);
+}
+
+/* Token colors - Matching the image style */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #7cad3e; /* Green for comments */
+}
+
+.token.punctuation {
+  color: #f8f8f2; /* White for punctuation */
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #f8f8f2; /* White for properties */
+}
+
+.token.boolean,
+.token.number {
+  color: #f8f8f2; /* White for numbers */
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #f8f8f2; /* White for strings */
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #f8f8f2; /* White for operators */
+  background: transparent;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #61afef; /* Blue for keywords like const */
+}
+
+.token.function,
+.token.class-name {
+  color: #f8f8f2; /* White for functions */
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #f8f8f2; /* White for variables */
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+/* JavaScript specific highlighting */
+.language-javascript .token.keyword,
+.language-typescript .token.keyword {
+  color: #61afef; /* Blue for keywords like const, let, var */
+}
+
+.language-javascript .token.comment,
+.language-typescript .token.comment {
+  color: #7cad3e; /* Green for comments */
+}
+
+.language-javascript .token.string,
+.language-typescript .token.string {
+  color: #98c379; /* Light green for strings */
+}
+
+.language-javascript .token.operator,
+.language-typescript .token.operator {
+  color: #f8f8f2; /* White for operators */
+}
+
+.language-javascript .token.punctuation,
+.language-typescript .token.punctuation {
+  color: #f8f8f2; /* White for punctuation */
+}
+
+.language-javascript .token.number,
+.language-typescript .token.number {
+  color: #d19a66; /* Orange for numbers */
+}
+
+.language-javascript .token.property,
+.language-typescript .token.property {
+  color: #e06c75; /* Red for properties */
+}
+
+/* Code block header with language name */
+.code-header {
+  @apply text-xs text-gray-400 px-4 py-2 rounded-t-lg -mb-1;
+  background-color: #282a36; /* Slightly lighter than the code block */
+  border-bottom: 1px solid #333;
+}
+
+/* Add a subtle left border to the code block */
+pre[class*="language-"] {
+  border-left: 4px solid #61afef;
+}
+
+/* Improve scrollbar styling */
+pre::-webkit-scrollbar {
+  height: 8px;
+  background-color: #282a36;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background-color: #444;
+  border-radius: 4px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}

@@ -1,31 +1,15 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import Link from "next/link"
-import { ChevronLeft, Download } from "lucide-react"
+import { ChevronLeft, Download, Loader2 } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
-
-// This is a client-side mock for the demo
-// In a real app, you'd use a server action or API route
-const mockFetchRemoteMarkdown = async (url: string) => {
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 1500))
-
-  // Basic URL validation
-  try {
-    new URL(url)
-  } catch (err) {
-    return { success: false, error: "Please enter a valid URL" }
-  }
-
-  // Simulate successful fetch
-  return { success: true, filename: `remote-content-${Date.now()}.md` }
-}
+import { useRouter } from "next/navigation"
 
 export default function RemotePage() {
   const { t } = useLanguage()
+  const router = useRouter()
   const [url, setUrl] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -43,10 +27,21 @@ export default function RemotePage() {
     setError(null)
 
     try {
-      const result = await mockFetchRemoteMarkdown(url)
+      // Call the API route
+      const response = await fetch("/api/remote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url }),
+      })
+
+      const result = await response.json()
 
       if (result.success) {
         setSuccess(true)
+        // Refresh the file list
+        router.refresh()
         // Reset form after successful fetch
         setUrl("")
       } else {
@@ -109,8 +104,17 @@ export default function RemotePage() {
               disabled={isLoading || !url}
               className="w-full py-2 px-4 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              {isLoading ? t("fetching") : t("fetch.and.save")}
-              {!isLoading && <Download className="inline-block ml-2 h-4 w-4" />}
+              {isLoading ? (
+                <span className="flex items-center justify-center">
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  {t("fetching")}
+                </span>
+              ) : (
+                <>
+                  {t("fetch.and.save")}
+                  <Download className="inline-block ml-2 h-4 w-4" />
+                </>
+              )}
             </button>
           </form>
         )}

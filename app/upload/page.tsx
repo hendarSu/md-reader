@@ -1,32 +1,11 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { ChevronLeft, Upload } from "lucide-react"
+import { ChevronLeft, Upload, Loader2 } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
-
-// This is a client-side mock for the demo
-// In a real app, you'd use a server action or API route
-const mockUploadMarkdownFile = async (formData: FormData) => {
-  // Simulate network delay
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-
-  const file = formData.get("file") as File
-
-  if (!file) {
-    return { success: false, error: "No file provided" }
-  }
-
-  if (!file.name.endsWith(".md")) {
-    return { success: false, error: "Only markdown (.md) files are allowed" }
-  }
-
-  // Simulate successful upload
-  return { success: true, filename: file.name }
-}
 
 export default function UploadPage() {
   const { t } = useLanguage()
@@ -64,12 +43,20 @@ export default function UploadPage() {
       const formData = new FormData()
       formData.append("file", file)
 
-      // Call the mock upload function
-      const result = await mockUploadMarkdownFile(formData)
+      // Call the API route
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      })
+
+      const result = await response.json()
 
       if (result.success) {
         setSuccess(true)
-        // Simulate redirect after successful upload
+        // Refresh the file list
+        router.refresh()
+
+        // Redirect after successful upload
         setTimeout(() => {
           router.push("/")
         }, 2000)
@@ -144,7 +131,14 @@ export default function UploadPage() {
               disabled={isUploading || !file}
               className="w-full py-2 px-4 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              {isUploading ? t("uploading") : t("upload.file.button")}
+              {isUploading ? (
+                <span className="flex items-center justify-center">
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  {t("uploading")}
+                </span>
+              ) : (
+                t("upload.file.button")
+              )}
             </button>
           </form>
         )}

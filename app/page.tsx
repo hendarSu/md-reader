@@ -2,27 +2,33 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { FileText, Upload, Globe, FileDown, FileIcon as FileWord } from "lucide-react"
+import { FileText, Upload, Globe, FileDown, FileIcon as FileWord, Loader2 } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 
 export default function Home() {
   const { t } = useLanguage()
   const [fileNames, setFileNames] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  // Fetch file names from an API route instead of using fs directly
+  // Fetch file names from the API route
   useEffect(() => {
     async function fetchFiles() {
       try {
-        // In a real app, this would be an API call to a server endpoint
-        // For now, we'll use a mock response
-        // Simulating network delay
-        await new Promise((resolve) => setTimeout(resolve, 500))
+        setIsLoading(true)
+        setError(null)
 
-        // Mock file list - in a real app, this would come from an API
-        setFileNames(["example.md", "javascript-examples.md", "code-example.md"])
+        const response = await fetch("/api/files")
+
+        if (!response.ok) {
+          throw new Error(`Failed to fetch files: ${response.status}`)
+        }
+
+        const data = await response.json()
+        setFileNames(data.files || [])
       } catch (error) {
         console.error("Error fetching files:", error)
+        setError("Failed to load files. Please try again later.")
       } finally {
         setIsLoading(false)
       }
@@ -55,7 +61,14 @@ export default function Home() {
 
       {isLoading ? (
         <div className="flex justify-center py-12">
-          <div className="animate-pulse text-gray-500">Loading files...</div>
+          <div className="flex items-center text-gray-500">
+            <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+            Loading files...
+          </div>
+        </div>
+      ) : error ? (
+        <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+          <p className="text-red-700">{error}</p>
         </div>
       ) : fileNames.length === 0 ? (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">

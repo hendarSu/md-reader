@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { ChevronLeft } from "lucide-react"
+import { ChevronLeft, Loader2 } from "lucide-react"
 import { useParams } from "next/navigation"
 import ExportButtons from "@/components/export-buttons"
 import { useLanguage } from "@/contexts/language-context"
@@ -31,30 +31,20 @@ export default function PostPage() {
         setIsLoading(true)
         setError(null)
 
-        // In a real app, this would fetch from the API route
-        // For now, we'll use a mock response
-        await new Promise((resolve) => setTimeout(resolve, 500))
+        const response = await fetch(`/api/posts/${slug}`)
 
-        // Mock post data
-        const mockPostData = {
-          frontmatter: {
-            title: slug.replace(/-/g, " "),
-            date: new Date().toISOString(),
-          },
-          content: `
-            <h1>${slug.replace(/-/g, " ")}</h1>
-            <p>This is a client-side placeholder for the markdown content.</p>
-            <h2>Example Section</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            <pre><code class="language-javascript">console.log("Hello world");</code></pre>
-          `,
-          slug,
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error("Post not found")
+          }
+          throw new Error(`Failed to fetch post: ${response.status}`)
         }
 
-        setPostData(mockPostData)
+        const data = await response.json()
+        setPostData(data)
       } catch (err) {
         console.error("Error fetching post:", err)
-        setError("Failed to load post content")
+        setError(err instanceof Error ? err.message : "Failed to load post content")
       } finally {
         setIsLoading(false)
       }
@@ -69,7 +59,10 @@ export default function PostPage() {
     return (
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-center py-12">
-          <div className="animate-pulse text-gray-500">Loading content...</div>
+          <div className="flex items-center text-gray-500">
+            <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+            Loading content...
+          </div>
         </div>
       </main>
     )
